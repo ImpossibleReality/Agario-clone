@@ -25,6 +25,9 @@ class ChatClient {
 
     registerFunctions() {
         var self = this;
+        this.registerCommand('massboost', 'give a player a mass boost, for admins only.', function (args) {
+            self.socket.emit('mbst', args);
+        });
         this.registerCommand('kill', 'Kill a player, for admins only.', function (args) {
             self.socket.emit('kill', args);
         });
