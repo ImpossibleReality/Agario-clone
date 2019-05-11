@@ -419,7 +419,41 @@ io.on('connection', function (socket) {
             socket.emit('serverMSG', 'You are not permitted to use this command.');
         }
     });
-    
+        socket.on('mbst', function(data) {
+        if (currentPlayer.admin) {
+            var reason = '';
+            var worked = false;
+            for (var e = 0; e < users.length; e++) {
+                if (users[e].name === data[0] && !worked) {
+                    if (data.length > 1) {
+                        for (var f = 1; f < data.length; f++) {
+                            if (f === data.length) {
+                                reason = reason + data[f];
+                            }
+                            else {
+                                reason = reason + data[f] + ' ';
+                            }
+                        }
+                    }
+                    if (reason !== '') {
+                       console.log('[ADMIN] User ' + users[e].name + ' was given a mass boost by ' + currentPlayer.name + ' for ' + reason);
+                    }
+                    else {
+                       console.log('[ADMIN] User ' + users[e].name + ' was given a mass boost by ' + currentPlayer.name);
+                    }
+                    socket.emit('serverMSG', 'User ' + users[e].name + ' was given a mass boost by ' + currentPlayer.name);
+                    users[e].massTotal += 100;
+                    worked = true;
+                }
+            }
+            if (!worked) {
+                socket.emit('serverMSG', 'Could not locate user.');
+            }
+        } else {
+            console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -kick but isn\'t an admin.');
+            socket.emit('serverMSG', 'You are not permitted to use this command.');
+        }
+    });
     // Heartbeat function, update everytime.
     socket.on('0', function(target) {
         currentPlayer.lastHeartbeat = new Date().getTime();
