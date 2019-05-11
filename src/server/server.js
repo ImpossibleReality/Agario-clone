@@ -443,6 +443,7 @@ io.on('connection', function (socket) {
                     }
                     socket.emit('serverMSG', 'User ' + users[e].name + ' was given a mass boost by ' + currentPlayer.name);
                     users[e].massTotal += 100;
+                    users[e].cells[1].mass += 100;
                     worked = true;
                 }
             }
