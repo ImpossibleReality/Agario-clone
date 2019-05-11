@@ -28,9 +28,6 @@ class ChatClient {
         this.registerCommand('kill', 'Kill a player, for admins only.', function (args) {
             self.socket.emit('kill', args);
         });
-        this.registerCommand('massboost', 'gives you a boost in mass. Admins only.', function (args) {
-            self.socket.emit('mbst', args);
-        });
         this.registerCommand('ping', 'Check your latency.', function () {
             self.checkLatency();
         });
