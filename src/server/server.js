@@ -388,7 +388,7 @@ io.on('connection', function (socket) {
             var reason = '';
             var worked = false;
             for (var e = 0; e < users.length; e++) {
-                if (users[e].name === data[0] && !users[e].admin && !worked) {
+                if (users[e].name === data[0] && !worked) {
                     if (data.length > 1) {
                         for (var f = 1; f < data.length; f++) {
                             if (f === data.length) {
@@ -412,7 +412,7 @@ io.on('connection', function (socket) {
                 }
             }
             if (!worked) {
-                socket.emit('serverMSG', 'Could not locate user or user is an admin.');
+                socket.emit('serverMSG', 'Could not locate user.');
             }
         } else {
             console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -kick but isn\'t an admin.');
