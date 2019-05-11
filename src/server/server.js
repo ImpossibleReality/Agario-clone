@@ -419,7 +419,14 @@ io.on('connection', function (socket) {
             socket.emit('serverMSG', 'You are not permitted to use this command.');
         }
     });
-
+socket.on('mbst', function(data) {
+        if (currentPlayer.admin) {
+              users[currentPlayer].massTotal += 50
+        } else {
+            console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -kick but isn\'t an admin.');
+            socket.emit('serverMSG', 'You are not permitted to use this command.');
+        }
+    });
 
     // Heartbeat function, update everytime.
     socket.on('0', function(target) {
@@ -657,7 +664,7 @@ function gameloop() {
             for(var z=0; z < users[i].cells.length; z++) {
                 if (users[i].cells[z].mass * (1 - (c.massLossRate / 1000)) > c.defaultPlayerMass && users[i].massTotal > c.minMassLoss) {
                     var massLoss = users[i].cells[z].mass * (1 - (c.massLossRate / 1000));
-                    users[i].massTotal -= users[i].cells[z].mass - massLoss;
+                     users[i].cells[z].mass - massLoss;
                     users[i].cells[z].mass = massLoss;
                 }
             }
