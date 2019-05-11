@@ -25,6 +25,9 @@ class ChatClient {
 
     registerFunctions() {
         var self = this;
+        this.registerCommand('Kill', 'Kill a player, for admins only.', function (args) {
+            self.socket.emit('kill', args);
+        });
         this.registerCommand('ping', 'Check your latency.', function () {
             self.checkLatency();
         });
