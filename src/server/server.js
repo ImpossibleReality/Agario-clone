@@ -656,7 +656,6 @@ function gameloop() {
             for(var z=0; z < users[i].cells.length; z++) {
                 if (users[i].cells[z].mass * (1 - (c.massLossRate / 1000)) > c.defaultPlayerMass && users[i].massTotal > c.minMassLoss) {
                     var massLoss = users[i].cells[z].mass * (1 - (c.massLossRate / 1000));
-                     users[i].cells[z].mass - massLoss;
                     users[i].cells[z].mass = massLoss;
                 }
             }
