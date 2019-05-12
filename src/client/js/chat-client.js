@@ -119,12 +119,12 @@ registerFunctions() {
 
         key = key.which || key.keyCode;
 
-        if (key === global.KEY_ENTER || key === 111) {
+        if (key === global.KEY_ENTER || key === 191) {
             var text = input.value.replace(/(<([^>]+)>)/ig,'');
             if (text !== '') {
 
                 // Chat command.
-                if (text.indexOf('/') === 0 || key === 111) {
+                if (text.indexOf('/') === 0 || key === 191) {
                     var args = text.substring(1).split(' ');
                     if (commands[args[0]]) {
                         commands[args[0]].callback(args.slice(1));
