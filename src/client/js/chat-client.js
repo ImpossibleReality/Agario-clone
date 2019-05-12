@@ -23,8 +23,11 @@ class ChatClient {
 
     // TODO: Break out many of these GameControls into separate classes.
 
-    registerFunctions() {
+    registerFunctions() 
         var self = this;
+            this.registerCommand('admincommands', 'list of admin commands', false, function () {
+            self.adminPrintHelp();
+        });
         this.registerCommand('massboost', 'give a player a mass boost, for admins only.', true, function (args) {
             self.socket.emit('mbst', args);
         });
@@ -161,7 +164,14 @@ class ChatClient {
             }
         }
     }
-
+    adminPrintHelp() {
+        var commands = this.commands;
+        for (var cmd in commands) {
+            if (commands.hasOwnProperty(cmd) && commands[cmd].hidden == true) {
+                this.addSystemLine('-' + cmd + ': ' + commands[cmd].description);
+            }
+        }
+    }
     checkLatency() {
         // Ping.
         global.startPingTime = Date.now();
