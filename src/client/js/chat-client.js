@@ -25,45 +25,45 @@ class ChatClient {
 
     registerFunctions() {
         var self = this;
-        this.registerCommand('massboost', 'give a player a mass boost, for admins only.', function (args) {
+        this.registerCommand('massboost', 'give a player a mass boost, for admins only.', true, function (args) {
             self.socket.emit('mbst', args);
         });
-        this.registerCommand('kill', 'Kill a player, for admins only.', function (args) {
+        this.registerCommand('kill', 'Kill a player, for admins only.', true, function (args) {
             self.socket.emit('kill', args);
         });
-        this.registerCommand('ping', 'Check your latency.', function () {
+        this.registerCommand('ping', 'Check your latency.', false, function () {
             self.checkLatency();
         });
 
-        this.registerCommand('dark', 'Toggle dark mode.', function () {
+        this.registerCommand('dark', 'Toggle dark mode.', false, function () {
             self.toggleDarkMode();
         });
 
-        this.registerCommand('border', 'Toggle visibility of border.', function () {
+        this.registerCommand('border', 'Toggle visibility of border.', false, function () {
             self.toggleBorder();
         });
 
-        this.registerCommand('mass', 'Toggle visibility of mass.', function () {
+        this.registerCommand('mass', 'Toggle visibility of mass.', false, function () {
             self.toggleMass();
         });
 
-        this.registerCommand('continuity', 'Toggle continuity.', function () {
+        this.registerCommand('continuity', 'Toggle continuity.', false, function () {
             self.toggleContinuity();
         });
 
-        this.registerCommand('roundfood', 'Toggle food drawing.', function (args) {
+        this.registerCommand('roundfood', 'Toggle food drawing.', false, function (args) {
             self.toggleRoundFood(args);
         });
 
-        this.registerCommand('help', 'Information about the chat commands.', function () {
+        this.registerCommand('help', 'Information about the chat commands.', false, function () {
             self.printHelp();
         });
 
-        this.registerCommand('login', 'Login as an admin.', function (args) {
+        this.registerCommand('login', 'Login as an admin.', false, function (args) {
             self.socket.emit('pass', args);
         });
 
-        this.registerCommand('kick', 'Kick a player, for admins only.', function (args) {
+        this.registerCommand('kick', 'Kick a player, for admins only.', true, function (args) {
             self.socket.emit('kick', args);
         });
         global.chatClient = this;
@@ -144,10 +144,11 @@ class ChatClient {
     }
 
     // Allows for addition of commands.
-    registerCommand(name, description, callback) {
+    registerCommand(name, description, hidden, callback) {
         this.commands[name] = {
             description: description,
-            callback: callback
+            callback: callback,
+            hidden: hidden
         };
     }
 
@@ -155,7 +156,7 @@ class ChatClient {
     printHelp() {
         var commands = this.commands;
         for (var cmd in commands) {
-            if (commands.hasOwnProperty(cmd)) {
+            if (commands.hasOwnProperty(cmd) && commands[cmd].hidden == false) {
                 this.addSystemLine('-' + cmd + ': ' + commands[cmd].description);
             }
         }
