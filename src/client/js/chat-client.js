@@ -124,7 +124,7 @@ registerFunctions() {
             if (text !== '') {
 
                 // Chat command.
-                if (text.indexOf('-') === 0) {
+                if (text.indexOf('/') === 0) {
                     var args = text.substring(1).split(' ');
                     if (commands[args[0]]) {
                         commands[args[0]].callback(args.slice(1));
@@ -159,7 +159,7 @@ registerFunctions() {
         var commands = this.commands;
         for (var cmd in commands) {
             if (commands.hasOwnProperty(cmd) && commands[cmd].hidden == false) {
-                this.addSystemLine('-' + cmd + ': ' + commands[cmd].description);
+                this.addSystemLine('/' + cmd + ': ' + commands[cmd].description);
             }
         }
     }
@@ -167,7 +167,7 @@ registerFunctions() {
         var commands = this.commands;
         for (var cmd in commands) {
             if (commands.hasOwnProperty(cmd) && commands[cmd].hidden == true) {
-                this.addSystemLine('-' + cmd + ': ' + commands[cmd].description);
+                this.addSystemLine('/' + cmd + ': ' + commands[cmd].description);
             }
         }
     }
