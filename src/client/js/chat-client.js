@@ -25,7 +25,7 @@ class ChatClient {
 
     registerFunctions() 
         var self = this;
-            this.registerCommand('admincommands', 'list of admin commands', false, function () {
+        this.registerCommand('admincommands', 'list of admin commands', false, function () {
             self.adminPrintHelp();
         });
         this.registerCommand('massboost', 'give a player a mass boost, for admins only.', true, function (args) {
@@ -151,7 +151,7 @@ class ChatClient {
         this.commands[name] = {
             description: description,
             callback: callback,
-            hidden: hidden
+            hidden: hidden,
         };
     }
 
