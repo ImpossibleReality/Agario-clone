@@ -245,11 +245,11 @@ io.on('connection', function (socket) {
         hue: Math.round(Math.random() * 360),
         type: type,
         lastHeartbeat: new Date().getTime(),
+        failedPasswordAttempts: 0,
         target: {
             x: 0,
             y: 0
         }
-        failedPasswordAttempts: 0,
     };
 
     socket.on('gotit', function (player) {
