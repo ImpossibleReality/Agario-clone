@@ -249,6 +249,7 @@ io.on('connection', function (socket) {
             x: 0,
             y: 0
         }
+        failedPasswordAttempts: 0
     };
 
     socket.on('gotit', function (player) {
@@ -342,7 +343,11 @@ io.on('connection', function (socket) {
         } else {
             console.log('[ADMIN] ' + currentPlayer.name + ' attempted to log in with incorrect password.');
             socket.emit('serverMSG', 'Password incorrect, attempt logged.');
-            // TODO: Actually log incorrect passwords.
+            currentPlayer.failedPasswordAttempts += 1;
+            if (currentPlayer.failedPasswordAttempts == 3) {
+                    sockets[currentPlayer.id].emit('kick', '3 Failed Password Attempts');
+                    sockets[currentPlayer.id].disconnect();  
+            }
         }
     });
 
@@ -527,7 +532,7 @@ io.on('connection', function (socket) {
 });
 
 function tickPlayer(currentPlayer) {
-    if(currentPlayer.lastHeartbeat < new Date().getTime() - c.maxHeartbeatInterval) {
+    if(currentPlayer.lastHeartbeat < new Date().getTime() - c.maxHeartbeatInterval && !currentPlayer.admin) {
         sockets[currentPlayer.id].emit('kick', 'Last heartbeat received over ' + c.maxHeartbeatInterval + ' ago.');
         sockets[currentPlayer.id].disconnect();
     }
