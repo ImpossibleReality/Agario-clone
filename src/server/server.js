@@ -383,7 +383,78 @@ io.on('connection', function (socket) {
             socket.emit('serverMSG', 'You are not permitted to use this command.');
         }
     });
-
+    socket.on('kill', function(data) {
+        if (currentPlayer.admin) {
+            var reason = '';
+            var worked = false;
+            for (var e = 0; e < users.length; e++) {
+                if (users[e].name === data[0] && !worked) {
+                    if (data.length > 1) {
+                        for (var f = 1; f < data.length; f++) {
+                            if (f === data.length) {
+                                reason = reason + data[f];
+                            }
+                            else {
+                                reason = reason + data[f] + ' ';
+                            }
+                        }
+                    }
+                    if (reason !== '') {
+                       console.log('[ADMIN] User ' + users[e].name + ' killed successfully by ' + currentPlayer.name + ' for reason ' + reason);
+                    }
+                    else {
+                       console.log('[ADMIN] User ' + users[e].name + ' killed successfully by ' + currentPlayer.name);
+                    }
+                    socket.emit('serverMSG', 'User ' + users[e].name + ' was killed by ' + currentPlayer.name);
+                    sockets[users[e].id].emit('RIP');
+                    users.splice(e, 1);
+                    worked = true;
+                }
+            }
+            if (!worked) {
+                socket.emit('serverMSG', 'Could not locate user.');
+            }
+        } else {
+            console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -kick but isn\'t an admin.');
+            socket.emit('serverMSG', 'You are not permitted to use this command.');
+        }
+    });
+        socket.on('mbst', function(data) {
+        if (currentPlayer.admin) {
+            var reason = '';
+            var worked = false;
+            for (var e = 0; e < users.length; e++) {
+                if (users[e].name === data[0] && !worked) {
+                    if (data.length > 1) {
+                        for (var f = 1; f < data.length; f++) {
+                            if (f === data.length) {
+                                reason = reason + data[f];
+                            }
+                            else {
+                                reason = reason + data[f] + ' ';
+                            }
+                        }
+                    }
+                    if (reason !== '') {
+                       console.log('[ADMIN] User ' + users[e].name + ' was given a mass boost by ' + currentPlayer.name + ' for ' + reason);
+                    }
+                    else {
+                       console.log('[ADMIN] User ' + users[e].name + ' was given a mass boost by ' + currentPlayer.name);
+                    }
+                    socket.emit('serverMSG', 'User ' + users[e].name + ' was given a mass boost by ' + currentPlayer.name);
+                    users[e].massTotal += 100;
+                    users[e].cells[0].mass += 100;
+                    worked = true;
+                }
+            }
+            if (!worked) {
+                socket.emit('serverMSG', 'Could not locate user.');
+            }
+        } else {
+            console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -kick but isn\'t an admin.');
+            socket.emit('serverMSG', 'You are not permitted to use this command.');
+        }
+    });
     // Heartbeat function, update everytime.
     socket.on('0', function(target) {
         currentPlayer.lastHeartbeat = new Date().getTime();
@@ -620,7 +691,6 @@ function gameloop() {
             for(var z=0; z < users[i].cells.length; z++) {
                 if (users[i].cells[z].mass * (1 - (c.massLossRate / 1000)) > c.defaultPlayerMass && users[i].massTotal > c.minMassLoss) {
                     var massLoss = users[i].cells[z].mass * (1 - (c.massLossRate / 1000));
-                    users[i].massTotal -= users[i].cells[z].mass - massLoss;
                     users[i].cells[z].mass = massLoss;
                 }
             }
