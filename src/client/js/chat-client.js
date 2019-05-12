@@ -119,7 +119,7 @@ registerFunctions() {
 
         key = key.which || key.keyCode;
 
-        if (key === global.KEY_ENTER || global.KEY_DIVIDE) {
+        if (key === global.KEY_ENTER || key === global.KEY_DIVIDE) {
             var text = input.value.replace(/(<([^>]+)>)/ig,'');
             if (text !== '') {
 
