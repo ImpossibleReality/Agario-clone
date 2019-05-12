@@ -249,7 +249,7 @@ io.on('connection', function (socket) {
             x: 0,
             y: 0
         }
-        failedPasswordAttempts: 0
+        failedPasswordAttempts: 0,
     };
 
     socket.on('gotit', function (player) {
