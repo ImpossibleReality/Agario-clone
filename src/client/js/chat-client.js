@@ -23,7 +23,7 @@ class ChatClient {
 
     // TODO: Break out many of these GameControls into separate classes.
 
-    registerFunctions() 
+        registerFunctions() 
         var self = this;
         this.registerCommand('admincommands', 'list of admin commands', false, function () {
             self.adminPrintHelp();
