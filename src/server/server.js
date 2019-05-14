@@ -236,8 +236,10 @@ io.on('connection', function (socket) {
 
     var currentPlayer = {
         id: socket.id,
+        ip:
         x: position.x,
         y: position.y,
+        mod: false,
         w: c.defaultPlayerMass,
         h: c.defaultPlayerMass,
         cells: cells,
@@ -338,8 +340,14 @@ io.on('connection', function (socket) {
         if (data[0] === c.adminPass) {
             console.log('[ADMIN] ' + currentPlayer.name + ' just logged in as an admin!');
             socket.emit('serverMSG', 'Welcome back ' + currentPlayer.name);
-            socket.broadcast.emit('serverMSG', currentPlayer.name + ' just logged in as admin!');
+            socket.broadcast.emit('serverMSG', currentPlayer.name + ' just logged in as an admin!');
             currentPlayer.admin = true;
+            else if (data[0] === c.modPass) {
+               console.log('[ADMIN] ' + currentPlayer.name + ' just logged in as a moderator!');
+            socket.emit('serverMSG', 'Welcome back ' + currentPlayer.name);
+            socket.broadcast.emit('serverMSG', currentPlayer.name + ' just logged in as a moderator!');
+            currentPlayer.mod = true;
+            }
         } else {
             console.log('[ADMIN] ' + currentPlayer.name + ' attempted to log in with incorrect password.');
             socket.emit('serverMSG', 'Password incorrect, attempt logged.');
@@ -348,6 +356,16 @@ io.on('connection', function (socket) {
                     sockets[currentPlayer.id].emit('kick', '3 Failed Password Attempts');
                     sockets[currentPlayer.id].disconnect();  
             }
+        }
+    });
+
+socket.on('cookieAuthorize', function(data) {
+        if (data[0] === c.accessKey) {
+            console.log('[ADMIN] ' + currentPlayer.name + ' just logged in as an admin!');
+            socket.emit('serverMSG', 'Welcome back ' + currentPlayer.name);
+            socket.broadcast.emit('serverMSG', currentPlayer.name + ' just logged in as an admin!');
+            currentPlayer.admin = true;
+        } 
         }
     });
 
