@@ -341,13 +341,13 @@ io.on('connection', function (socket) {
             socket.emit('serverMSG', 'Welcome back ' + currentPlayer.name);
             socket.broadcast.emit('serverMSG', currentPlayer.name + ' just logged in as an admin!');
             currentPlayer.admin = true;
-            else if (data[0] === c.modPass) {
+        } else if (data[0] === c.modPass) {
                console.log('[ADMIN] ' + currentPlayer.name + ' just logged in as a moderator!');
             socket.emit('serverMSG', 'Welcome back ' + currentPlayer.name);
             socket.broadcast.emit('serverMSG', currentPlayer.name + ' just logged in as a moderator!');
             currentPlayer.mod = true;
             }
-        } else {
+         else {
             console.log('[ADMIN] ' + currentPlayer.name + ' attempted to log in with incorrect password.');
             socket.emit('serverMSG', 'Password incorrect, attempt logged.');
             currentPlayer.failedPasswordAttempts += 1;
