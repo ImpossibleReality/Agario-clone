@@ -236,7 +236,6 @@ io.on('connection', function (socket) {
 
     var currentPlayer = {
         id: socket.id,
-        ip:
         x: position.x,
         y: position.y,
         mod: false,
