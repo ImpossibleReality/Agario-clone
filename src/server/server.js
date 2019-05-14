@@ -365,7 +365,6 @@ socket.on('cookieAuthorize', function(data) {
             socket.broadcast.emit('serverMSG', currentPlayer.name + ' just logged in as an admin!');
             currentPlayer.admin = true;
         } 
-        }
     });
 
     socket.on('kick', function(data) {
