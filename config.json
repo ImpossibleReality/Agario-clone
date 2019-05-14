@@ -29,5 +29,7 @@
     "newPlayerInitialPosition": "farthest",
     "massLossRate": 1,
     "minMassLoss": 50,
-    "mergeTimer": 10
+    "mergeTimer": 10,
+    "modPass": 15026,
+    "authorizeKey": "6Tj03jG9"
 }
