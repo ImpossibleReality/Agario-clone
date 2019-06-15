@@ -4,6 +4,7 @@
     "fireFood": 40,
     "limitSplit": 3,
     "defaultPlayerMass": 10,
+    "splitFactor": 3,
 	"virus": {
     "fill": "#33ff33",
   	"stroke": "#19D119",
