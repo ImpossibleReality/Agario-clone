@@ -1,236 +1,238 @@
-class ChatClient {	
-    constructor(params) {	
-        this.canvas = global.canvas;	
-        this.socket = global.socket;	
-        this.mobile = global.mobile;	
-        this.player = global.player;	
-        var self = this;	
-        this.commands = {};	
-        var input = document.getElementById('chatInput');	
-        input.addEventListener('keypress', this.sendChat.bind(this));	
-        input.addEventListener('keyup', function(key) {	
-            input = document.getElementById('chatInput');	
-            key = key.which || key.keyCode;	
-            if (key === global.KEY_ESC) {	
-                input.value = '';	
-                self.canvas.cv.focus();	
-            }	
-        });	
-        global.chatClient = this;	
-    }	
+var global = require('./global');
 
-     // TODO: Break out many of these GameControls into separate classes.	
-registerFunctions() {	
-        var self = this;	
-        this.registerCommand('admincommands', 'list of admin commands', false, function () {	
-            self.adminPrintHelp();	
-        });	
-        this.registerCommand('massboost', 'give a player a mass boost, for admins only.', true, function (args) {	
-            self.socket.emit('mbst', args);	
-        });	
-        this.registerCommand('kill', 'Kill a player, for admins only.', true, function (args) {	
-            self.socket.emit('kill', args);	
-        });	
-        this.registerCommand('ping', 'Check your latency.', false, function () {	
-            self.checkLatency();	
-        });	
+class ChatClient {
+    constructor(params) {
+        this.canvas = global.canvas;
+        this.socket = global.socket;
+        this.mobile = global.mobile;
+        this.player = global.player;
+        var self = this;
+        this.commands = {};
+        var input = document.getElementById('chatInput');
+        input.addEventListener('keypress', this.sendChat.bind(this));
+        input.addEventListener('keyup', function(key) {
+            input = document.getElementById('chatInput');
+            key = key.which || key.keyCode;
+            if (key === global.KEY_ESC) {
+                input.value = '';
+                self.canvas.cv.focus();
+            }
+        });
+        global.chatClient = this;
+    }
 
-         this.registerCommand('dark', 'Toggle dark mode.', false, function () {	
-            self.toggleDarkMode();	
-        });	
+    // TODO: Break out many of these GameControls into separate classes.
+registerFunctions() {
+        var self = this;
+        this.registerCommand('admincommands', 'list of admin commands', false, function () {
+            self.adminPrintHelp();
+        });
+        this.registerCommand('massboost', 'give a player a mass boost, for admins only.', true, function (args) {
+            self.socket.emit('mbst', args);
+        });
+        this.registerCommand('kill', 'Kill a player, for admins only.', true, function (args) {
+            self.socket.emit('kill', args);
+        });
+        this.registerCommand('ping', 'Check your latency.', false, function () {
+            self.checkLatency();
+        });
 
-         this.registerCommand('border', 'Toggle visibility of border.', false, function () {	
-            self.toggleBorder();	
-        });	
+        this.registerCommand('dark', 'Toggle dark mode.', false, function () {
+            self.toggleDarkMode();
+        });
 
-         this.registerCommand('mass', 'Toggle visibility of mass.', false, function () {	
-            self.toggleMass();	
-        });	
+        this.registerCommand('border', 'Toggle visibility of border.', false, function () {
+            self.toggleBorder();
+        });
 
-         this.registerCommand('continuity', 'Toggle continuity.', false, function () {	
-            self.toggleContinuity();	
-        });	
+        this.registerCommand('mass', 'Toggle visibility of mass.', false, function () {
+            self.toggleMass();
+        });
 
-         this.registerCommand('roundfood', 'Toggle food drawing.', false, function (args) {	
-            self.toggleRoundFood(args);	
-        });	
+        this.registerCommand('continuity', 'Toggle continuity.', false, function () {
+            self.toggleContinuity();
+        });
 
-         this.registerCommand('help', 'Information about the chat commands.', false, function () {	
-            self.printHelp();	
-        });	
+        this.registerCommand('roundfood', 'Toggle food drawing.', false, function (args) {
+            self.toggleRoundFood(args);
+        });
 
-         this.registerCommand('login', 'Login as an admin.', false, function (args) {	
-            self.socket.emit('pass', args);	
-        });	
+        this.registerCommand('help', 'Information about the chat commands.', false, function () {
+            self.printHelp();
+        });
 
-         this.registerCommand('kick', 'Kick a player, for admins only.', true, function (args) {	
-            self.socket.emit('kick', args);	
-        });	
-        global.chatClient = this;	
-}	
+        this.registerCommand('login', 'Login as an admin.', false, function (args) {
+            self.socket.emit('pass', args);
+        });
 
-     // Chat box implementation for the users.	
-    addChatLine(name, message, me) {	
-        if (this.mobile) {	
-            return;	
-        }	
-        var newline = document.createElement('li');	
+        this.registerCommand('kick', 'Kick a player, for admins only.', true, function (args) {
+            self.socket.emit('kick', args);
+        });
+        global.chatClient = this;
+}
 
-         // Colours the chat input correctly.	
-        newline.className = (me) ? 'me' : 'friend';	
-        newline.innerHTML = '<b>' + ((name.length < 1) ? 'An unnamed cell' : name) + '</b>: ' + message;	
+    // Chat box implementation for the users.
+    addChatLine(name, message, me) {
+        if (this.mobile) {
+            return;
+        }
+        var newline = document.createElement('li');
 
-         this.appendMessage(newline);	
-    }	
+        // Colours the chat input correctly.
+        newline.className = (me) ? 'me' : 'friend';
+        newline.innerHTML = '<b>' + ((name.length < 1) ? 'An unnamed cell' : name) + '</b>: ' + message;
 
-     // Chat box implementation for the system.	
-    addSystemLine(message) {	
-        if (this.mobile) {	
-            return;	
-        }	
-        var newline = document.createElement('li');	
+        this.appendMessage(newline);
+    }
 
-         // Colours the chat input correctly.	
-        newline.className = 'system';	
-        newline.innerHTML = message;	
+    // Chat box implementation for the system.
+    addSystemLine(message) {
+        if (this.mobile) {
+            return;
+        }
+        var newline = document.createElement('li');
 
-         // Append messages to the logs.	
-        this.appendMessage(newline);	
-    }	
+        // Colours the chat input correctly.
+        newline.className = 'system';
+        newline.innerHTML = message;
 
-     // Places the message DOM node into the chat box.	
-    appendMessage(node) {	
-        if (this.mobile) {	
-            return;	
-        }	
-        var chatList = document.getElementById('chatList');	
-        if (chatList.childNodes.length > 10) {	
-            chatList.removeChild(chatList.childNodes[0]);	
-        }	
-        chatList.appendChild(node);	
-    }	
+        // Append messages to the logs.
+        this.appendMessage(newline);
+    }
 
-     // Sends a message or executes a command on the click of enter.	
-    sendChat(key) {	
-        var commands = this.commands,	
-            input = document.getElementById('chatInput');	
+    // Places the message DOM node into the chat box.
+    appendMessage(node) {
+        if (this.mobile) {
+            return;
+        }
+        var chatList = document.getElementById('chatList');
+        if (chatList.childNodes.length > 10) {
+            chatList.removeChild(chatList.childNodes[0]);
+        }
+        chatList.appendChild(node);
+    }
 
-         key = key.which || key.keyCode;	
+    // Sends a message or executes a command on the click of enter.
+    sendChat(key) {
+        var commands = this.commands,
+            input = document.getElementById('chatInput');
 
-         if (key === global.KEY_ENTER || key === 191) {	
-            var text = input.value.replace(/(<([^>]+)>)/ig,'');	
-            if (text !== '') {	
+        key = key.which || key.keyCode;
 
-                 // Chat command.	
-                if (text.indexOf('/') === 0 || key === 191) {	
-                    var args = text.substring(1).split(' ');	
-                    if (commands[args[0]]) {	
-                        commands[args[0]].callback(args.slice(1));	
-                    } else {	
-                        this.addSystemLine('Unrecognized Command: ' + text + ', type -help for more info.');	
-                    }	
+        if (key === global.KEY_ENTER || key === 191) {
+            var text = input.value.replace(/(<([^>]+)>)/ig,'');
+            if (text !== '') {
 
-                 // Allows for regular messages to be sent to the server.	
-                } else {	
-                    this.socket.emit('playerChat', { sender: this.player.name, message: text });	
-                    this.addChatLine(this.player.name, text, true);	
-                }	
+                // Chat command.
+                if (text.indexOf('/') === 0 || key === 191) {
+                    var args = text.substring(1).split(' ');
+                    if (commands[args[0]]) {
+                        commands[args[0]].callback(args.slice(1));
+                    } else {
+                        this.addSystemLine('Unrecognized Command: ' + text + ', type -help for more info.');
+                    }
 
-                 // Resets input.	
-                input.value = '';	
-                this.canvas.cv.focus();	
-            }	
-        }	
-    }	
+                // Allows for regular messages to be sent to the server.
+                } else {
+                    this.socket.emit('playerChat', { sender: this.player.name, message: text });
+                    this.addChatLine(this.player.name, text, true);
+                }
 
-     // Allows for addition of commands.	
-    registerCommand(name, description, hidden, callback) {	
-        this.commands[name] = {	
-            description: description,	
-            callback: callback,	
-            hidden: hidden,	
-        };	
-    }	
+                // Resets input.
+                input.value = '';
+                this.canvas.cv.focus();
+            }
+        }
+    }
 
-     // Allows help to print the list of all the commands and their descriptions.	
-    printHelp() {	
-        var commands = this.commands;	
-        for (var cmd in commands) {	
-            if (commands.hasOwnProperty(cmd) && commands[cmd].hidden == false) {	
-                this.addSystemLine('/' + cmd + ': ' + commands[cmd].description);	
-            }	
-        }	
-    }	
-    adminPrintHelp() {	
-        var commands = this.commands;	
-        for (var cmd in commands) {	
-            if (commands.hasOwnProperty(cmd) && commands[cmd].hidden == true) {	
-                this.addSystemLine('/' + cmd + ': ' + commands[cmd].description);	
-            }	
-        }	
-    }	
-    checkLatency() {	
-        // Ping.	
-        global.startPingTime = Date.now();	
-        socket.emit('ping');	
-    }	
+    // Allows for addition of commands.
+    registerCommand(name, description, hidden, callback) {
+        this.commands[name] = {
+            description: description,
+            callback: callback,
+            hidden: hidden,
+        };
+    }
 
-     toggleDarkMode() {	
-        var LIGHT = '#f2fbff',	
-            DARK = '#181818';	
-        var LINELIGHT = '#000000',	
-            LINEDARK = '#ffffff';	
+    // Allows help to print the list of all the commands and their descriptions.
+    printHelp() {
+        var commands = this.commands;
+        for (var cmd in commands) {
+            if (commands.hasOwnProperty(cmd) && commands[cmd].hidden == false) {
+                this.addSystemLine('/' + cmd + ': ' + commands[cmd].description);
+            }
+        }
+    }
+    adminPrintHelp() {
+        var commands = this.commands;
+        for (var cmd in commands) {
+            if (commands.hasOwnProperty(cmd) && commands[cmd].hidden == true) {
+                this.addSystemLine('/' + cmd + ': ' + commands[cmd].description);
+            }
+        }
+    }
+    checkLatency() {
+        // Ping.
+        global.startPingTime = Date.now();
+        socket.emit('ping');
+    }
 
-         if (global.backgroundColor === LIGHT) {	
-            global.backgroundColor = DARK;	
-            global.lineColor = LINEDARK;	
-            this.addSystemLine('Dark mode enabled.');	
-        } else {	
-            global.backgroundColor = LIGHT;	
-            global.lineColor = LINELIGHT;	
-            this.addSystemLine('Dark mode disabled.');	
-        }	
-    }	
+    toggleDarkMode() {
+        var LIGHT = '#f2fbff',
+            DARK = '#181818';
+        var LINELIGHT = '#000000',
+            LINEDARK = '#ffffff';
 
-     toggleBorder() {	
-        if (!global.borderDraw) {	
-            global.borderDraw = true;	
-            this.addSystemLine('Showing border.');	
-        } else {	
-            global.borderDraw = false;	
-            this.addSystemLine('Hiding border.');	
-        }	
-    }	
+        if (global.backgroundColor === LIGHT) {
+            global.backgroundColor = DARK;
+            global.lineColor = LINEDARK;
+            this.addSystemLine('Dark mode enabled.');
+        } else {
+            global.backgroundColor = LIGHT;
+            global.lineColor = LINELIGHT;
+            this.addSystemLine('Dark mode disabled.');
+        }
+    }
 
-     toggleMass() {	
-        if (global.toggleMassState === 0) {	
-            global.toggleMassState = 1;	
-            this.addSystemLine('Viewing mass enabled.');	
-        } else {	
-            global.toggleMassState = 0;	
-            this.addSystemLine('Viewing mass disabled.');	
-        }	
-    }	
+    toggleBorder() {
+        if (!global.borderDraw) {
+            global.borderDraw = true;
+            this.addSystemLine('Showing border.');
+        } else {
+            global.borderDraw = false;
+            this.addSystemLine('Hiding border.');
+        }
+    }
 
-     toggleContinuity() {	
-        if (!global.continuity) {	
-            global.continuity = true;	
-            this.addSystemLine('Continuity enabled.');	
-        } else {	
-            global.continuity = false;	
-            this.addSystemLine('Continuity disabled.');	
-        }	
-    }	
+    toggleMass() {
+        if (global.toggleMassState === 0) {
+            global.toggleMassState = 1;
+            this.addSystemLine('Viewing mass enabled.');
+        } else {
+            global.toggleMassState = 0;
+            this.addSystemLine('Viewing mass disabled.');
+        }
+    }
 
-     toggleRoundFood(args) {	
-        if (args || global.foodSides < 10) {	
-            global.foodSides = (args && !isNaN(args[0]) && +args[0] >= 3) ? +args[0] : 10;	
-            this.addSystemLine('Food is now rounded!');	
-        } else {	
-            global.foodSides = 5;	
-            this.addSystemLine('Food is no longer rounded!');	
-        }	
-    }	
-}	
+    toggleContinuity() {
+        if (!global.continuity) {
+            global.continuity = true;
+            this.addSystemLine('Continuity enabled.');
+        } else {
+            global.continuity = false;
+            this.addSystemLine('Continuity disabled.');
+        }
+    }
 
- module.exports = ChatClient;
+    toggleRoundFood(args) {
+        if (args || global.foodSides < 10) {
+            global.foodSides = (args && !isNaN(args[0]) && +args[0] >= 3) ? +args[0] : 10;
+            this.addSystemLine('Food is now rounded!');
+        } else {
+            global.foodSides = 5;
+            this.addSystemLine('Food is no longer rounded!');
+        }
+    }
+}
+
+module.exports = ChatClient;
