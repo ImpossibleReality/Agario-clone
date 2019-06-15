@@ -515,7 +515,7 @@ socket.on('cookieAuthorize', function(data) {
     });
     socket.on('2', function(virusCell) {
         function splitCell(cell) {
-            if(cell.mass >= c.defaultPlayerMass*2) {
+            if(cell.mass >= c.defaultPlayerMass*c.splitFactor) {
                 cell.mass = cell.mass/2;
                 cell.radius = util.massToRadius(cell.mass);
                 currentPlayer.cells.push({
@@ -528,14 +528,14 @@ socket.on('cookieAuthorize', function(data) {
             }
         }
 
-        if(currentPlayer.cells.length < c.limitSplit && currentPlayer.massTotal >= c.defaultPlayerMass*2) {
+        if(currentPlayer.cells.length < c.limitSplit && currentPlayer.massTotal >= c.defaultPlayerMass*c.splitFactor) {
             //Split single cell from virus
             if(virusCell) {
               splitCell(currentPlayer.cells[virusCell]);
             }
             else {
               //Split all cells
-              if(currentPlayer.cells.length < c.limitSplit && currentPlayer.massTotal >= c.defaultPlayerMass*2) {
+              if(currentPlayer.cells.length < c.limitSplit && currentPlayer.massTotal >= c.defaultPlayerMass*c.splitFactor) {
                   var numMax = currentPlayer.cells.length;
                   for(var d=0; d<numMax; d++) {
                       splitCell(currentPlayer.cells[d]);
