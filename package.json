@@ -31,7 +31,8 @@
     "Juha Tauriainen <juha@bin.fi> (https://github.com/JuhQ)",
     "Madara Uchiha <me@madara.ninja> (https://github.com/MadaraUchiha)",
     "Keith Groves <Keithalgroves@gmail.com> (https://github.com/buskcoin)",
-    "wb9688 <wbertrums@gmail.com> (https://github.com/wb9688)"
+    "wb9688 <wbertrums@gmail.com> (https://github.com/wb9688)",
+    "WickedTree (https://github.com/wickedtree)"
   ],
   "dependencies": {
     "babel": "^6.5.2",
